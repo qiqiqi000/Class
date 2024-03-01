@@ -1,0 +1,65 @@
+/* * {
+  margin: 0;
+  padding: 0;
+} */
+
+.background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, .45);
+  z-index: 1;
+}
+
+.Modal {
+  position: fixed;
+  top: 45vh;
+  left: 50vw;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  width: 300px;
+  height: 500px;
+  border: 3px solid #fff;
+  border-radius: 15px;
+  background: #fff;
+  transition: width 3s ease-in-out;
+}
+
+.Modal .ModalHeader {
+  display: flex;
+  justify-content: space-between;
+}
+
+.Modal .ModalHeader h3{
+  margin: 15px 0 15px 20px;
+}
+
+.Modal .ModalHeader span {
+  margin: 15px 20px 0 0;
+  cursor: pointer;
+}
+
+.Modal .ModalContent {
+  padding: 0 20px;
+}
+
+.Modal .ModalFooter {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  display: flex;
+  justify-content: right;
+}
+
+.Modal .ModalFooter button {
+  margin: 20px 5px 0 0;
+  color: #fff;
+  width: 60px;
+  height: 35px;
+  background: #1677ff;
+  border: 1px;
+  border-radius: 5px;
+  cursor: pointer;
+}

@@ -1,0 +1,807 @@
+/*设置本文件的全局变量*/
+body {
+  margin: 0;
+  padding:0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+#root, body, html {
+  height: 100%;
+}
+
+
+/*文本样式，用于输入框提示符和表格表头 */
+.labelStyle,.labelStyle label {
+  font-family: 楷体;
+  font-size: 14px;
+  overflow: hidden; 
+  text-overflow: ellipsis; 
+  white-space: nowrap; 
+  /* display: block;   */
+}
+
+.textdiv{ 
+  overflow: hidden; 
+  text-overflow: ellipsis; 
+  white-space: nowrap; 
+}
+
+.treeNodeStyle{ 
+  white-space: nowrap; 
+}
+
+.listdiv{ 
+  overflow: hidden; 
+  text-overflow: ellipsis; 
+  white-space: nowrap; 
+  display: block;
+  vertical-align: middle;
+  cursor:pointer;
+}
+
+.resizeHandleStyle {
+  position: absolute;
+  top: '0px';
+  right: '-3px'; /* 使得把手稍微突出以便于拖动 */
+  bottom: '0px';
+  width: '3px'; /* 把手宽度 */
+  cursor: 'ew-resize';
+  background-Color:rgb(224,236,255);
+  z-index: 10; /* 确保把手在最前面 */
+}
+
+/* 按钮样式 */
+.buttonStyle {
+  width:70px;
+  height:28px;
+  display: inline-block;
+  text-decoration: none;
+  background-color: #4CAF50; /* 按钮背景颜色 */
+  color: #ffffff; /* 文本颜色 */
+  border-radius: 4px; /* 圆角 */
+  border: none; /* 去掉边框 */
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 阴影效果 */
+  transition: background-color 0.3s ease; /* 鼠标悬停时的过渡效果 */
+}
+
+/* 超链接css设置 */
+.custom-link {
+  text-decoration: none; /* 去除下划线 */
+  padding: 4px 8px 5px 4px;
+  border-radius: 4px;
+  color: black;
+}
+.custom-link:visited {
+  background-color: yellow;
+}
+.custom-link:hover {
+  background-color: blue; /* 悬停时链接背景颜色  #a0a0a0  #E0ECFF purple */
+  color: #fff; /* 悬停时链接的文字颜色  */
+}
+
+/* 下拉框样式 */
+.comboboxStyle {
+  padding-left: 10px;
+  font-size: 14px;
+  height: 30px;
+  width: 200px;
+  outline: none;
+  border: 1px solid var(--dropdown-border-color, #ccc);
+  border-radius: 4px;
+  background-color: var(--dropdown-background-color, #fff);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.comboboxStyle[disabled] {
+  background-color: rgb(245, 245, 245); /* 设置背景颜色 */
+  color: black;
+  cursor: not-allowed; /* 设置光标样式为禁用样式 */  
+}
+/*文本框及其disabled样式设置*/
+.textboxStyle {
+  padding-left: 6px;
+  font-size: 14px;
+  height: 30px;
+  outline: none;
+  border: 1px solid var(--dropdown-border-color, #ccc);
+  border-radius: 4px;
+  background-color: var(--dropdown-background-color, #fff);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.textboxStyle[disabled] {
+  /* 添加你想要的样式 */
+  /* background-color: rgb(255, 255, 255, 0.75); 设置背景颜色 */
+  background-color: rgb(240, 240, 240); /* 设置背景颜色 */
+  color: black;
+  /* color: gray; 设置文本颜色 */
+  cursor: not-allowed; /* 设置光标样式为禁用样式 */
+  /* 添加其他样式属性，根据需求 */
+}
+
+/* 屏幕分割的css设置 */
+.layout-body {
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
+  height: 100%; /* 使用最小高度保证不会超出屏幕 */
+  box-sizing: border-box;
+}
+.layout-top {
+  /* background-color: #f2f2f2; */
+  background-color: #E0ECFF;
+  box-sizing: border-box;
+}
+.layout-bottom {
+  background-color: #f2f2f2;
+  box-sizing: border-box;
+}
+.layout-middle {
+  flex: 1; /* 中间区域占据剩余空间 */
+  background-color: #ffffff;  
+  overflow: auto; /* 如果内容过多，允许产生垂直滚动条 */
+  box-sizing: border-box;  
+}
+
+.layout-disabled {  /* 将一个div禁止点击 */
+  flex: 1; /* 中间区域占据剩余空间 */
+  overflow: auto; /* 如果内容过多，允许产生垂直滚动条 */
+  box-sizing: border-box;  
+  pointer-events: none;  /* 禁用点击事件 */
+  background-color: rgba(0, 0, 0, 0.5); /* 半透明黑色背景 */
+  cursor: not-allowed;  /* 显示禁用光标 */
+}
+
+/* 弹出子窗体css设置，实例307等 */
+.myFormStyle {
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid #b5b5b5;  /* #d9d9d9;*/
+  background-color:#fff;
+  border-radius: 8px;
+  z-index: 2;  /*覆盖标题>=那个值**/
+}
+
+/*table的css设置，实例307*/
+.cellStyle {  /*单元格样式，用于实例304、307表格设置*/  
+  background-color: #ffffff;
+  padding: 0px 4px 0px 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  font-size: 14px;
+  text-overflow: ellipsis;
+}
+.cellStyle-disabled {  /*单元格样式，用于实例304、307表格设置*/  
+  background-color: #f2f2f2;
+  padding: 0px 4px 0px 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  font-size: 14px;
+  text-overflow: ellipsis;
+}
+
+.fixedHeaderStyle {  /*固定列的标题css*/
+  position: sticky; 
+  background-color: #f2f2f2; 
+  text-align: center;
+  font-size: 14px;
+  padding: 0px 4px 0px 4px;
+  font-family: '楷体';
+}
+
+.headerStyle {  /*固定列的标题css*/
+  background-color: #f2f2f2; 
+  text-align: center;
+  padding: 0px 4px 0px 4px;
+  font-size: 14px;
+  font-family: '楷体';
+}
+
+/* 表格光标悬停时 */
+.table-link {
+  text-decoration: none; /* 去除下划线 */
+  padding: 4px 8px 5px 4px;
+  border-radius: 4px;
+  color: black;  
+}
+.table-link:hover {
+  color: blue; /* 悬停时链接的文字颜色  */
+}
+
+/* 表格样式，应用于实例304与308 */
+/* 
+.table-container {
+  position: relative;
+  overflow: scroll; 
+  height: 100%;
+}
+.table-container .table{
+  table-layout: fixed;
+}
+.table-head {
+  table-layout: fixed;
+  width: 100%;
+  position: sticky;
+  top: 0;
+  background-color: #f2f2f2;
+  z-index: 1;
+}
+.table-body-container {  
+  width: 100%;
+}
+
+.table-body {
+  table-layout: fixed;
+  width: 100%;
+  border-collapse: collapse;
+}
+.table td, .table th{
+  width: 200px;
+}
+.table-body td {
+  border: 1px solid #ddd;
+  padding: '2px 4px 2px 4px';
+}
+.table-head th {
+  border: 1px solid #ddd;
+  text-align: 'center';
+  padding: '2px 4px 2px 4px';
+  background-color: #f2f2f2;
+}
+
+.table-container th:nth-child(1), td:nth-child(1){
+  position: sticky;
+  left: 0;
+  background-color: #f2f2f2;
+} */
+
+/*
+.table-container th:nth-child(2)
+.table-container,td:nth-child(2){
+  position: sticky;
+  background-color: #f2f2f2;
+}
+*/
+/*
+.table th::after, .table td::after {
+  content: '';
+  display: block;
+  width: 1px;
+  height: 100%;
+  background-color: #cccccc;
+  position: absolute;
+  right: 0;
+  top: 0;
+} 
+
+.table th::before, .table td::before {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 1px;
+  background-color: #cccccc;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+}
+*/
+
+/* 可编辑网格样式 */
+.editable-cell-value-wrap {
+  padding: 5px 12px;
+  cursor: pointer;
+}
+
+.editable-row:hover .editable-cell-value-wrap {
+  padding: 4px 11px;
+  border: 1px solid #d9d9d9;
+  border-radius: 2px;
+}
+
+/* 原生html生成tree节点样式  */
+.myTreeStyle .tree {
+  list-style: none;
+  padding-left: 0;
+}
+
+.myTreeStyle .node {
+  cursor: pointer;
+}
+
+.myTreeStyle .toggle::before {
+  content: '+';
+  display: inline-block;
+  transform: rotate(45deg);
+  margin-right: 4px;
+  transition: transform 0.3s ease;
+}
+
+.myTreeStyle .expanded .toggle::before {
+  transform: rotate(135deg);
+}
+
+.myTreeStyle ul {
+  padding-left: 20px;
+}
+
+/* 设置modal标题的高度 */
+.custom-modal .ant-modal-header {
+  height: 40px; /* 自定义表头高度 */
+  padding: 6px 0px 0px 12px;  /*标题的间距*/
+  margin: 0;  
+}
+.custom-modal .ant-modal-content {
+  margin: 0; /* 自定义 Modal 内容与边框之间的间距 */
+  padding: 4px 12px 8px 12px;
+}
+
+/*以下是antd样式修改*/ 
+.ant-layout {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+.ant-tabs-content {
+  height: 100%;
+  overflow: hidden;
+}
+
+/* 预览pdf文件时需要设置，注意是tabs-tabpane不是tabpanel  */
+.ant-tabs-content .ant-tabs-tabpane {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.ant-tabs-nav {
+  height: 40px; /* 设置选项卡标题/导航的高度 */
+  padding-left: 10px;
+  margin: 0;  
+}
+/*
+.ant-tabs-ink-bar {
+  visibility: hidden;
+}
+.ant-tabs-nav .ant-tabs-tab {
+  padding: 0px;
+}
+*/
+
+/* 在你的样式文件中或者使用样式对象 */
+.custom-tabs .ant-tabs-nav {
+  /* 设置标签标题高度 */
+  height: 36px; /* 自定义标签标题高度 */
+  padding: 0px 0px 0px 20px;
+  margin: 0px 0px 6px 0px;
+}
+ /* 调整标题与边框之间的间距 */
+/* .custom-tabs .ant-tabs-nav::before,
+.custom-tabs .ant-tabs-nav::after {
+  margin-bottom: 0px;
+} */
+
+/* 选中树节点时的颜色和行高  */
+.ant-tree-node-selected{
+   background-color: rgb(0, 132, 255) !important; 
+   color: white !important; 
+   padding: 0px 8px 0px 0px !important; 
+}
+
+.ant-tree-node-content-wrapper{
+  height: 28px !important;
+  line-height: 28px !important; 
+  padding: 0px 8px 0px 0px !important;  /*与node-selected样式一致，否则选中结点时会移位*/
+}
+
+.ant-tree-title {
+  white-space: normal;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+/* antd-table样式设置 */
+/*去掉table中双滚动条*/
+.ant-table-sticky-scroll{
+  display: none !important;
+}
+
+/*antd-table文字间隙设置，不能设置行高 **/
+.ant-table-tbody >tr >td {
+  padding: 0px 4px 0px 4px !important;
+  font-family: 'times new roman' !important;
+}
+.ant-table-tbody td{
+  border-left-width: 0px !important;
+  border-right-width: 1px !important;
+}
+
+/* table表头样式，标题居中，修改背景色  #FFE4B5   #E0ECFF  */
+.ant-table-thead >tr >th{
+  background: #efefef  !important;  
+  border-bottom: 1px solid #95B8E7 !important;
+  padding: 3px 4px 3px 4px !important;
+  font-family: '楷体';
+  text-align: center !important;
+}
+
+.ant-table-thead >tr >td{
+  border-width: 0 !important;
+  border-bottom: 1px solid #95B8E7 !important;
+  background: #efefef  !important;  
+}
+
+/*table中行序号的字体及其大小 */
+.rownumberStyle { 
+  font-family: 'times new roman';
+  font-size: 13px;
+  padding: 0px 0px 0px 0px;
+  text-align: center;
+}
+
+.paginationStyle { /* 分页栏的字体及其大小 */
+  font-family: 'times new roman';  
+}
+
+table{
+  border-collapse: collapse;
+}
+
+/*表格线条颜色设置，单线和行高度*/
+table tr td {   
+  height: 34px;     
+}
+
+/*设置所有数字框的字体为times new roman*/
+.ant-input-number-input{
+  font-family: 'times new roman';
+}
+/*设置所有日期框的字体为times new roman*/
+.ant-picker-input > input {
+  font-family: 'times new roman';
+}
+
+/**修改table表格线颜色**/
+/**以下是非ant样式修改与定义 ****/
+.tableRowStyle { /*修改单个页面的table行高*/
+  height: 34px;
+}
+/**自定义ant table表格线与行高样式. #95B8E7  #ECECEC #D3D3D3 #CCCCCC #BEBEBE #A9A9A9  **/
+.myTableStyle .ant-table-wrapper {
+  border: 1px solid #D3D3D3 !important;
+}
+.myTableStyle thead th{
+  border: 1px solid #D3D3D3 !important;
+  border-width: 0px !important;
+  border-left-width: 0px !important;
+  border-right-width: 1px !important;
+  background: #efefef  !important;  
+}
+.myTableStyle .ant-table-tbody > tr > td {
+  border: 1px solid #D3D3D3 !important;
+  height: 34px;
+  border-top-width: 0px !important;
+  border-left-width: 0px !important;
+  border-right-width: 1px !important;
+}
+.myTableStyle .ant-table-thead >tr >td{
+  border-bottom: 0px solid #D3D3D3 !important;
+}
+.myTableStyle thead th .ant-radio-wrapper {
+  border: 1px solid #e8e8e8  !important;  /*暂时无用*/
+}
+.myTableStyle .ant-radio-inner{
+  border-color: #D3D3D3 !important;
+}
+.myTableStyle .ant-checkbox-inner{
+  border-color: #D3D3D3 !important;
+}
+/**自定义ant table表格线与行高样式结束 **/
+
+.cellBorderStyle{
+  height: 34px;
+  border: 1px solid #95B8E7 !important;
+}
+
+/* 选项卡设置 */
+.tabs {
+  list-style-type: none;
+  height: 32px;
+  line-height:32px;
+  margin: 0px;
+  padding: 0px;
+  padding-left: 8px;
+  width: 50000px;
+  border-style: solid;
+  border-width: 0 0 1px 0;
+}
+.tabpanel {
+  float: left;
+  /*display: inline-block;*/
+  margin: 2px 4px 0px 8px;
+  padding: 0;
+  position: relative; 
+  border: 0;
+  width:80px;
+  cursor: pointer;
+}
+
+
+.tabs li a:hover{
+  border-bottom: 1px solid #6bc30d;
+  color:#6bc30d; 
+}
+
+.tabpanel-selected {
+  font-weight: bold;
+  outline: none;
+}
+
+.ellipsis{
+  /* 隐藏溢出 */
+  overflow: hidden;
+  /* 溢出省略 */
+  text-overflow: ellipsis;
+  /* 同一行不换行 */
+  white-space: nowrap; 
+   /* 垂直居中对齐 */
+  vertical-align: middle;
+  display: inline-block;
+}
+
+.container{ 
+  min-height: inherit; 
+  position: relative;
+  height: 500px;
+}
+
+.plainbox {
+border: 0px solid #95B8E7;
+font-size: 13px;
+-moz-border-radius: 0px 0px 0px 0px;
+-webkit-border-radius: 0px 0px 0px 0px;
+border-radius: 0px 0px 0px 0px;
+}
+
+.plaintextbox {
+border: 0px solid #95B8E7;
+font-size: 13px;
+-moz-border-radius: 0px 0px 0px 0px;
+-webkit-border-radius: 0px 0px 0px 0px;
+border-radius: 0px 0px 0px 0px;  
+white-space:normal;
+word-break:break-all;
+word-wrap:break-word; 
+padding: 0px 4px 1px 5px; 
+}
+
+.numberboxStyle {
+  font-family: 'times new roman';
+  text-align: right;
+ }
+  
+.plainnumberbox {
+border: 0px solid #95B8E7;
+font-size: 14px;
+font-family: 'times new roman';
+padding: 1px 5px 0px 2px; 
+}
+
+.plainnumberspinner {
+border: 0px solid #95B8E7;
+font-size: 14px;
+font-family: 'times new roman';
+}
+
+.zmenu{
+position: fixed;
+width: 260px;
+height: 50px;
+/*设置背景颜色为黑色*/
+background-color: black;
+top: 94px;
+right: 40px;
+/*设置背景的透明度,如果是1的话,那么就把下面的字体全部挡住了*/
+opacity: 0.7;
+}
+.zmenu img{	cursor: pointer; }
+.zoomimgvbar{
+position: absolute;
+width: 50px;
+height: 156px;
+background-color: black;
+bottom: 30px;
+right: 40px;
+opacity: 0.7;
+}
+.zoomimgvbar img{
+cursor: pointer;
+}
+.tab-inner{
+display:inline-block;
+line-height:12px;
+padding-top:5px;
+}
+.tab-inner img{
+border:0;
+}
+
+.rowbutton-c1{
+  color: white;
+  border-radius: 4px;
+  font-size:12px;
+  padding:2px 4px 2px 4px;
+  background: -webkit-linear-gradient(top,#fece34,#d8a605);
+  background: -moz-linear-gradient(top,#fece34,#d8a605);
+  background: linear-gradient(top,#fece34,#d8a605);
+  border:1px solid #e68900;
+  background: #ffab2e;	
+}
+
+.rowbutton-c1:hover,.c7>.panel-header{
+color: #fff;
+}
+
+.button-edit{
+  color: white;
+  border-radius: 4px;
+  font-size:12px;
+  padding:1px 4px 3px 4px;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+  border-width:0px;
+  background: rgb(66, 184, 221); 
+}
+
+.button-delete{
+  color: white;
+  border-radius: 4px;
+  font-size:12px;
+  padding:1px 4px 3px 4px;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+  border-width:0px;
+  background: rgb(223, 117, 20); /* this is an orange */
+}
+
+
+
+.winIcon{	background-image:url(../images/win1.ico) !important;}
+.windowIcon{      background-image:url(../images/win2.ico)!important; }
+.panelIcon{	background-image:url(../images/win3.ico) !important;}
+.titleIcon{	background-image:url(../images/win4.ico) !important;}
+.tabIcon{      background-image:url(../images/win5.ico)!important; }
+.win1Icon{      background-image:url(../images/win9.ico)!important; }
+.win2Icon{      background-image:url(../images/win14.ico)!important; }
+.formIcon{	background-image:url(../images/winform.png) !important;}
+.windowsearchIcon{      background-image:url(../images/window_search.png)!important; }
+.windowfindIcon{      background-image:url(../images/window_search.png)!important; }
+
+.loginIcon{	background-image:url(../images/login.png) !important;}
+.chooseIcon{ background-image:url(../images/return.png) !important; }
+.lockIcon { background-image: url(../images/lock.png) !important; }
+.keyIcon { background-image: url(../images/key.png) !important; }
+.reloginIcon{ background-image: url(../images/relogin.png) !important; }
+
+.cancelIcon {background-image: url(../images/cancel.png) !important;}
+.stopIcon { background-image: url(../images/stop.png) !important;}
+.closeIcon{ background-image:url(../images/closeall.png) !important;}
+.exitIcon{ 	background-image:url(../images/exit.png) !important;}
+.quitIcon{ 	background-image:url(../images/quit.png) !important;}
+.okIcon{ background-image:url(../images/buttonok.png) !important;}
+.confirmIcon{ 	background-image:url(../images/confirm.png) !important;}
+.playIcon{ 	background-image:url(../images/play.png) !important;}
+
+
+.icon{display:none  !important}
+.bulletIcon{	background-image: url(../images/bullet.png) !important;}
+.actionIcon{	background-image: url(../images/action.png) !important;}
+
+.connectIcon{	background-image: url(../images/connect.png) !important;}
+.addIcon {	background-image: url( ../images/addnew.png ) !important;}
+.addsubIcon {	background-image: url( ../images/add.png ) !important;}
+.appendIcon {	background-image: url( ../images/append.png ) !important;}
+.insertIcon {	background-image: url( ../images/insert.png ) !important;}
+.insertrowIcon {	background-image: url( ../images/table_row_insert.png ) !important;}
+.rowaddIcon{	background-image:url(../images/table_add.png)!important; }
+.rowinsertIcon{	background-image:url(../images/table_row_insert.png)!important; }
+.rowdeleteIcon{	background-image:url(../images/table_row_delete.png)!important; }
+.roweditIcon{	background-image:url(../images/table_edit.png)!important; }
+.rowsaveIcon{	background-image:url(../images/table_save.png)!important; }
+
+.updateIcon {	background-image: url( ../images/edit.gif ) !important;	background-repeat: no-repeat;}
+.editIcon {	background-image: url( ../images/edit.png ) !important;	background-repeat: no-repeat;}
+.deletefileIcon {	background-image: url( ../images/deletefile.png) !important;}
+.deletetableIcon {	background-image: url( ../images/delete_table.png) !important;}
+.deleteIcon {	background-image: url( ../images/delete.png) !important;}
+.eraseIcon {	background-image: url( ../images/erase.png) !important;}
+.removeIcon {	background-image: url( ../images/remove.png) !important;}
+.invalidIcon {	background-image: url( ../images/delete_note.png) !important;}
+.convertIcon {	background-image: url( ../images/convert.png) !important;}
+.reverseIcon {	background-image: url( ../images/convert.png) !important;}
+.searchIcon {	background-image: url( ../images/search.png) !important;}
+.locateIcon {	background-image: url( ../images/locate.png) !important;}
+.filterIcon {	background-image: url( ../images/filter.png) !important;}
+.refreshIcon {	background-image: url( ../images/refresh.gif) !important;}
+.sumIcon {	background-image: url( ../images/sum.png) !important;}
+.readIcon {	background-image: url( ../images/read.png) !important;}
+
+
+.saveIcon{ 	background-image:url(../images/save.png) !important;}
+.submitIcon{ 	background-image:url(../images/submit.png) !important;}
+.exitIcon{ 	background-image:url(../images/exit.png) !important;}
+.menuIcon{ 	background-image:url(../images/menu.png) !important;}
+.noteIcon {	background-image: url( ../images/note.png) !important;}
+.keyIcon {	background-image: url( ../images/key.png) !important;}
+.keylockIcon {	background-image: url( ../images/key_lock.png) !important;}
+.taskIcon {	background-image: url( ../images/task_document.png) !important;}
+.calculatorIcon{ 	background-image:url(../images/calculator.png) !important;}
+.calculationIcon{ 	background-image:url(../images/calculation.png) !important;}
+.accountIcon{ 	background-image:url(../images/account.png) !important;}
+.helpIcon{ 	background-image:url(../images/helpme.gif) !important;}
+.copyIcon{ 	background-image:url(../images/copy.png) !important;}
+.pasteIcon{ 	background-image:url(../images/paste.png) !important;}
+.pluginIcon{ 	background-image:url(../images/plugin.gif) !important;}
+.addviewIcon{ 	background-image:url(../images/addView.gif) !important;}
+
+.returnIcon{ 	background-image:url(../images/return.png) !important;}
+
+.printerIcon {	background-image:url(../images/printer.png) !important;}
+.homeIcon{	background-image:url(../images/home.png)!important; }
+.resetIcon{	background-image:url(../images/reset.png)!important; }
+.collapseIcon{	background-image:url(../images/collapse.png)!important; }
+.expandIcon{	background-image:url(../images/expand.png)!important; }
+.runIcon{	background-image:url(../images/run.png)!important; }
+.rotateIcon{	background-image:url(../images/rotate.png)!important; }
+.rotateimgIcon{	background-image:url(../images/rotate_img.png)!important; }
+.dropdownIcon{	background-image:url(../images/arrowdown.gif)!important; }
+.moveupIcon{	background-image:url(../images/arrow_up.png)!important; }
+.movedownIcon{	background-image:url(../images/arrow_down.png)!important; }
+.zoominIcon{	background-image:url(../images/zoom_in.png)!important; }
+
+.arrowrightIcon{	background-image:url(../images/arrowright.png)!important; }
+.arrowleftIcon{	background-image:url(../images/arrowleft.png)!important; }
+.arrowbackIcon{	background-image:url(../images/arrowback.png)!important; }
+.arrowforwardIcon{	background-image:url(../images/arrowforward.png)!important; }
+.arrowupIcon{	background-image:url(../images/arrowup.png)!important; }
+.arrowdownIcon{	background-image:url(../images/arrowdown.png)!important; }
+.arrowexitIcon{	background-image:url(../images/arrowexit.png)!important; }
+
+.cartIcon{	background-image:url(../images/cart.png)!important; }
+.textIcon{	background-image:url(../images/text.png)!important; }
+.setIcon{	background-image:url(../images/set.png)!important; }
+.databaseIcon{	background-image:url(../images/database.png)!important; }
+.treenodeIcon{	background-image:url(../images/node.png)!important; }
+.nodeIcon{	background-image:url(../images/item1.ico)!important; }
+.tableeditIcon{	background-image:url(../images/tableedit.png)!important; }
+.tableIcon{	background-image:url(../images/table.png)!important; }
+.editdataIcon{	background-image:url(../images/editdata.png)!important; }
+.selectIcon{ background-image:url(../images/select.png)!important; }
+.viewIcon{ background-image:url(../images/view.png)!important; }
+.rewindIcon{	background-image:url(../images/rewind.png)!important; }
+.forwardIcon{	background-image:url(../images/fastforward.png)!important; }
+.searchaddIcon{	background-image:url(../images/searchadd.png)!important; }
+
+.pagefirstIcon{	background-image:url(../images/page-first.gif)!important; }
+.pagelastIcon{	background-image:url(../images/page-last.gif)!important; }
+.pagenextIcon{	background-image:url(../images/page-next.gif)!important; }
+.pageprevIcon{	background-image:url(../images/page-prev.gif)!important; }
+.pagepriorIcon{	background-image:url(../images/page-prev.gif)!important; }
+.uploadIcon{    background-image:url(../images/upload.png)!important; }
+.downloadIcon{	background-image:url(../images/download.png)!important; }
+.downfileIcon{	background-image:url(../images/downfile.png)!important; }
+.leafnode{      background-image:url(../images/leafnode.gif)!important; }
+.leafnodeIcon{      background-image:url(../images/leafnode.gif)!important; }
+.sortIcon{      background-image:url(../images/sort.gif)!important; }
+.sortascIcon{      background-image:url(../images/sort_asc.gif)!important; }
+.sortdescIcon{      background-image:url(../images/sort_desc.gif)!important; }
+.folderopenIcon{      background-image:url(../images/folder-open.gif)!important; }
+.gridIcon{      background-image:url(../images/grid.png)!important; }
+.treeIcon{      background-image:url(../images/tree.gif)!important; }
+.chncheckedIcon{      background-image:url(../images/chnchecked.png)!important; }
+.wordIcon{      background-image:url(../images/word.gif)!important; }
+.excelIcon{      background-image:url(../images/excel.gif)!important; }
+.pdfIcon{      background-image:url(../images/pdf.gif)!important; }
+.mailIcon{      background-image:url(../images/mail.png)!important; }
+.importIcon{      background-image:url(../images/import.png)!important; }
+.exportIcon{      background-image:url(../images/export.png)!important; }

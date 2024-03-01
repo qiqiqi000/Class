@@ -1,0 +1,16 @@
+{
+  "schoolName": "ABC School",
+  "address": {"street": "123 Main St", "city": "New York", "country": "USA"},
+   "courses": [
+     {"id": 1, "name": "Math", 
+      "teacher": {"name": "John Smith", "age": 35},
+      "students": [{"name": "Alice", "grade": 95}, {"name": "Bob", "grade": 80}]
+     },{"id": 2, "name": "Science", 
+      "teacher": {"name": "Jane Doe", "age": 40}, 
+      "students": [{"name": "Charlie", "grade": 90},{"name": "Diana", "grade": 85}]
+     },{ "id": 2, "name": "Physics",
+      "teacher": { "name": "Albert Einstein", "age": 55 },
+      "students": [{"name": "Missa", "grade": 75}, {"name": "Lyndia", "grade": 80}]
+    }
+   ]
+}

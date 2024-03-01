@@ -1,0 +1,60 @@
+.tableContainer {
+  position: relative;
+  overflow: scroll; 
+  height: 100%;
+}
+.tableContainer .table{
+  table-layout: fixed;
+}
+.tableHead {
+  table-layout: fixed;
+  width: 100%;
+  position: sticky;
+  top: 0;
+  background-color: #f2f2f2;
+  z-index: 1;
+}
+.tableBodyContainer {
+  /*max-height: 400px; */
+  width: 100%;
+}
+
+.tableBody {
+  table-layout: fixed;
+  width: 100%;
+  border-collapse: collapse;
+}
+.table td, .table th{
+  width: 200px;
+}
+.tableBody td {
+  border: 1px solid #ddd;
+  padding: '2px 4px 2px 4px';
+}
+.tableHead th {
+  border: 1px solid #ddd;
+  text-align: 'center';
+  padding: '2px 4px 2px 4px'; /*padding: '6px 0px 6px 0px';*/
+  background-color: #f2f2f2;
+}
+
+.tableContainer th:nth-child(1), td:nth-child(1){
+  position: sticky;
+  left: 0;
+  background-color: #f2f2f2;
+}
+
+/* 
+D:\myReact\mylab\node_modules\react-scripts\config
+creat-react-app:解决css冲突问题:
+安装eject(不一定需要)
+npm run eject
+
+打开配置文件webpack.config.js（在文件夹D:\myReact\mylab\node_modules\react-scripts\config中）
+找到css-loader配置(大概在112行左右）
+添加到下列语句css-loader中
+{
+  importLoaders:1,
+  modules :true
+}
+*/
